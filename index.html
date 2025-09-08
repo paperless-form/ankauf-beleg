@@ -21,23 +21,25 @@
                     </div>
                     <div class="card-body p-4">
                         <!-- Form Section -->
-                        <form class="mb-5">
+                        <form id="formValues" action="https://script.google.com/macros/s/AKfycbwthXDpXu7fqXoAEtuiwBSXJEa3pNlB0nw1bRhaeW33dlD9rGpYxJIXKClKm8LI-5bj/exec" method="post">
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
                                     <label for="name" class="form-label fw-semibold">Name</label>
-                                    <input type="text" class="form-control form-control-lg required" id="name" placeholder="Name">
+                                    <input type="text" class="form-control form-control-lg required" id="name" placeholder="Name" name="name">
+                                    <input type="hidden" name="ref" id="ref">
+                                    <input type="hidden" name="total" id="total">
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <label for="date" class="form-label fw-semibold">Datum</label>
-                                    <input type="text" class="form-control form-control-lg datepicker" id="date" readonly>
+                                    <input type="text" class="form-control form-control-lg datepicker" id="date" readonly name="date">
                                 </div>
                                 <div class="col-12">
                                     <label for="address" class="form-label fw-semibold">Adresse</label>
-                                    <input type="text" class="form-control form-control-lg required" id="address" placeholder="Adresse">
+                                    <input type="text" class="form-control form-control-lg required" id="address" placeholder="Adresse" name="address">
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <label for="payment" class="form-label fw-semibold">So bezahlen Sie</label>
-                                    <select class="form-select form-select-lg required" id="payment">
+                                    <select class="form-select form-select-lg required" id="payment" name="payment">
                                         <option value="" selected disabled>Zahlungsart auswählen</option>
                                         <option value="paypal">PayPal</option>
                                         <option value="bank">Bank</option>
@@ -45,30 +47,30 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <!-- Table Section -->
+                            <div class="table-responsive mt-4">
+                                <table class="table table-hover table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th scope="col">Produktname</th>
+                                            <th scope="col">Preis</th>
+                                            <th scope="col">Artikelcode</th>
+                                            <th scope="col" class="text-center">Aktion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="products">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="text-center mt-4">
+                                <button type="button" class="btn btn-primary btn-submit">
+                                    Ankauf Beleg erstellen
+                                </button>
+                            </div>
                         </form>
-
-                        <!-- Table Section -->
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th scope="col">Produktname</th>
-                                        <th scope="col">Preis</th>
-                                        <th scope="col">Artikelcode</th>
-                                        <th scope="col" class="text-center">Aktion</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="products">
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-primary">
-                                Ankauf Beleg erstellen
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -78,14 +80,16 @@
     <!-- Bootstrap Icons -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Bootstrap 5 JS (optional, for enhanced functionality) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script>    
         $(document).ready(function() {
             var d = new Date();
             var today = addZero(d.getDate())+"/"+addZero(d.getMonth()+1)+"/"+d.getFullYear();
+            var ref = addZero(d.getDate()) + '' + addZero(d.getMonth() + 1) + '' + d.getFullYear().toString().substr(-2) + '' + addZero(d.getHours()) + '' + addZero(d.getMinutes())+ '' +addZero(d.getSeconds());
             $('#date').val(today);
+            $('#ref').val(ref);
             $('.datepicker').datepicker({
                 format: 'dd/mm/yyyy',
                 autoclose: true,
@@ -115,7 +119,7 @@
                     </td>
                     <td>
                         <div>
-                            <input type="text" class="form-control number required" placeholder="Preis" name="price">
+                            <input type="text" class="form-control price number required" placeholder="Preis" name="price">
                         </div>
                     </td>
                     <td>
@@ -131,6 +135,18 @@
                 </tr>
             `);
         }
+        $(document).on('input', '.number', function (e) {
+            this.value = this.value.replace(/[^0.00-9.99]/g, '').replace(/(\..*)\./g, '$1').replace(new RegExp("(^[\\d]{50})[\\d]", "g"), '$1');
+        });
+        $(document).on('input', '.price', function() {
+            var total = 0;
+            $('.price').each(function() {
+                var price = $(this).val();
+                if(price != "")
+                    total = parseFloat(total) + parseFloat(price);
+            });
+            $('#total').val(total.toFixed(2));
+        });
 
         function validate() {
             var valid = true;
@@ -162,12 +178,57 @@
             $(this).closest('tr').remove();
         });
 
-        $(document).on('click', '.btn-primary', function() {
+        $(document).on('click', '.btn-submit', function() {
             if(!validate()) {
                 return;
             }
             else{
-                alert('Tests durchgeführt');
+                var form = $("#formValues");
+                $('.btn-submit').attr('disabled', 'disabled');
+                $('.btn-submit').text('Please wait...');
+                var url_gsheet = $('#formValues').attr("action");
+                $.ajax({
+                    type: "POST",
+                    url: url_gsheet,
+
+                    data: $(form).serialize(),
+                    success: function (response) {
+                        if (response.result == "success") {
+                            Swal.fire({
+                                title: "Good Job!",
+                                text: "Thank you for submitting",
+                                icon: "success",
+                            })
+                                // $('.btn-submit').removeAttr('disabled');
+                                // $('.btn-submit').text('Submit Again');
+                                .then(function () {
+                                    window.location = window.location.href;
+                                });
+                            setTimeout(function () {
+                                window.location = window.location.href;
+                            }, 3000);
+                        } else {
+                            Swal.fire({
+                                title: "Error!",
+                                text: response.error,
+                                icon: "error",
+                            }).then(function () {
+                                $('.btn-submit').removeAttr('disabled');
+                                $('.btn-submit').text('Submit Again');
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Something went wrong",
+                            icon: "error",
+                        }).then(function () {
+                            $('.btn-submit').removeAttr('disabled');
+                            $('.btn-submit').text('Submit Again');
+                        });
+                    }
+                });
             }
         });
     </script>
