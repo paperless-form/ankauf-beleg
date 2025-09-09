@@ -196,7 +196,7 @@
             else{
                 var form = $("#formValues");
                 $('.btn-submit').attr('disabled', 'disabled');
-                $('.btn-submit').text('Please wait...');
+                $('.btn-submit').text('Bitte warten...');
                 var url_gsheet = $('#formValues').attr("action");
                 $.ajax({
                     type: "POST",
@@ -206,8 +206,8 @@
                     success: function (response) {
                         if (response.result == "success") {
                             Swal.fire({
-                                title: "Good Job!",
-                                text: "Thank you for submitting",
+                                title: "Gute Arbeit!",
+                                text: "Vielen Dank für die Übermittlung",
                                 icon: "success",
                             })
                                 // $('.btn-submit').removeAttr('disabled');
@@ -225,7 +225,7 @@
                                 icon: "error",
                             }).then(function () {
                                 $('.btn-submit').removeAttr('disabled');
-                                $('.btn-submit').text('Submit Again');
+                                $('.btn-submit').text('Erneut einreichen');
                             });
                         }
                     },
@@ -236,7 +236,7 @@
                             icon: "error",
                         }).then(function () {
                             $('.btn-submit').removeAttr('disabled');
-                            $('.btn-submit').text('Submit Again');
+                            $('.btn-submit').text('Erneut einreichen');
                         });
                     }
                 });
