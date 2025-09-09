@@ -24,27 +24,31 @@
                         <form id="formValues" action="https://script.google.com/macros/s/AKfycbwthXDpXu7fqXoAEtuiwBSXJEa3pNlB0nw1bRhaeW33dlD9rGpYxJIXKClKm8LI-5bj/exec" method="post">
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
-                                    <label for="name" class="form-label fw-semibold">Name</label>
+                                    <label for="name" class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control form-control-lg required" id="name" placeholder="Name" name="name">
                                     <input type="hidden" name="ref" id="ref">
                                     <input type="hidden" name="total" id="total">
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <label for="date" class="form-label fw-semibold">Datum</label>
+                                    <label for="date" class="form-label fw-semibold">Datum <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control form-control-lg datepicker" id="date" readonly name="date">
                                 </div>
                                 <div class="col-12">
-                                    <label for="address" class="form-label fw-semibold">Adresse</label>
+                                    <label for="address" class="form-label fw-semibold">Adresse <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control form-control-lg required" id="address" placeholder="Adresse" name="address">
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <label for="payment" class="form-label fw-semibold">So bezahlen Sie</label>
+                                    <label for="payment" class="form-label fw-semibold">So bezahlen Sie <span class="text-danger">*</span></label>
                                     <select class="form-select form-select-lg required" id="payment" name="payment">
                                         <option value="" selected disabled>Zahlungsart auswählen</option>
                                         <option value="paypal">PayPal</option>
                                         <option value="bank">Bank</option>
                                         <option value="cash">Cash</option>
                                     </select>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label for="payment_information" class="form-label fw-semibold">Zahlungsinformation</label>
+                                    <input type="text" class="form-control form-control-lg" id="payment_information" placeholder="Zahlungsinformation" name="payment_information">
                                 </div>
                             </div>
 
