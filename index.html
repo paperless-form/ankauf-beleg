@@ -128,7 +128,7 @@
                     </td>
                     <td>
                         <div>
-                            <input type="text" class="form-control price number required" placeholder="Preis" name="price">
+                            <input type="text" class="form-control price required" placeholder="Preis" name="price">
                         </div>
                     </td>
                     <td>
@@ -144,15 +144,13 @@
                 </tr>
             `);
         }
-        $(document).on('input', '.number', function (e) {
-            this.value = this.value.replace(/[^0.00-9.99]/g, '').replace(/(\..*)\./g, '$1').replace(new RegExp("(^[\\d]{50})[\\d]", "g"), '$1');
-        });
+        
         $(document).on('input', '.price', function() {
             var total = 0;
             $('.price').each(function() {
                 var price = $(this).val();
                 if(price != "")
-                    total = parseFloat(total) + parseFloat(price);
+                    total = parseFloat(total) + parseFloat(price.replace(/,/g, ''));
             });
             $('#total').val(total.toFixed(2));
             $('#total-amount').text(total.toFixed(2));
